@@ -3,23 +3,17 @@ services:
     image: gitlab/gitlab-ce:latest
     container_name: gitlab
     restart: unless-stopped
-    hostname: ${HOST}
+    hostname: gitlab.local
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        #external_url ${EXTERNAL_URL}
-        external_url 'http://localhost'
-       
-        gitlab_rails['gitlab_signup_enabled'] = true
-        unicorn['worker_processes'] = 2
-        postgresql['shared_buffers'] = "256MB"
-        prometheus_monitoring['enable'] = false
-        
-        # Для локального использования - отключаем HTTPS
-        nginx['redirect_http_to_https'] = false
-        nginx['listen_port'] = 80
-        nginx['listen_https'] = false
+        external_url 'http://gitlab.local:7778';
+        gitlab_rails['gitlab_signup_enabled'] = 'true';
+        # Отключаем HTTPS для локальной разработки
+        nginx['redirect_http_to_https'] = false;
+        # Можно указать явный порт для nginx (по умолчанию 80 внутри контейнера)
+        nginx['listen_port'] = 80;
     ports:
-      - "80:80"
+      - "7778:80"
       - "443:443"
       - "22:22"
     volumes:
@@ -30,18 +24,17 @@ services:
       - gitlab-network
     shm_size: '256m'
 
-  gitlab-runner:
-    image: gitlab/gitlab-runner:latest
-    container_name: gitlab-runner
-    restart: unless-stopped
-    depends_on:
-      - gitlab
-    volumes:
-      - gitlab_runner_config:/etc/gitlab-runner
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./runner-config:/home/gitlab-runner
-    networks:
-      - gitlab-network
+#  gitlab-runner:
+#    image: gitlab/gitlab-runner:latest
+#    container_name: gitlab-runner
+#    restart: unless-stopped
+#    depends_on:
+#      - gitlab
+#    volumes:
+#      - gitlab_runner_config:/etc/gitlab-runner
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    networks:
+#      - gitlab-network
 
 networks:
   gitlab-network:
@@ -51,4 +44,4 @@ volumes:
   gitlab_config:
   gitlab_logs:
   gitlab_data:
-  gitlab_runner_config:
+#  gitlab_runner_config:
