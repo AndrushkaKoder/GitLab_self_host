@@ -6,16 +6,13 @@ services:
     hostname: gitlab.local
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://gitlab.local:7778';
+        external_url 'localhost';
         gitlab_rails['gitlab_signup_enabled'] = 'true';
-        # Отключаем HTTPS для локальной разработки
-        nginx['redirect_http_to_https'] = false;
-        # Можно указать явный порт для nginx (по умолчанию 80 внутри контейнера)
         nginx['listen_port'] = 80;
+        nginx['redirect_http_to_https'] = false
+        nginx['listen_https'] = false
     ports:
-      - "7778:80"
-      - "443:443"
-      - "22:22"
+      - "80:80"
     volumes:
       - gitlab_config:/etc/gitlab
       - gitlab_logs:/var/log/gitlab
@@ -23,6 +20,7 @@ services:
     networks:
       - gitlab-network
     shm_size: '256m'
+
 
 #  gitlab-runner:
 #    image: gitlab/gitlab-runner:latest
