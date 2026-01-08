@@ -5,8 +5,8 @@ services:
     restart: unless-stopped
     hostname: gitlab.pet-cloud.ru
     environment:
-      GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://gitlab.pet-cloud.ru';
+      GITLAB_OMNIBUS_CONFIG: | # Изменить хост при публикации на удаленный сервер
+        external_url 'https://gitlab.pet-cloud.ru'; 
         gitlab_rails['gitlab_shell_ssh_port'] = 2222;
         gitlab_rails['gitlab_signup_enabled'] = 'true';
         nginx['listen_port'] = 80;
@@ -23,7 +23,7 @@ services:
       - gitlab-network
     shm_size: '256m'
 
-  gitlab-runner:
+  gitlab-runner: #В первый раз поднять без контейнера раннера, добавить позже
     image: gitlab/gitlab-runner:latest
     container_name: gitlab-runner
     restart: unless-stopped
@@ -37,6 +37,7 @@ services:
 
 networks:
   gitlab-network:
+    name: gitlab-network
     driver: bridge
 
 volumes:
