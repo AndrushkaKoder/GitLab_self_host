@@ -6,7 +6,7 @@ services:
     hostname: gitlab.pet-cloud.ru
     environment:
       GITLAB_OMNIBUS_CONFIG: | # Изменить хост при публикации на удаленный сервер
-        external_url 'https://gitlab.pet-cloud.ru'; 
+        external_url 'https://gitlab.kolmakov.tech'; 
         gitlab_rails['gitlab_shell_ssh_port'] = 2222;
         gitlab_rails['gitlab_signup_enabled'] = 'true';
         nginx['listen_port'] = 80;
