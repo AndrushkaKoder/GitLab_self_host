@@ -1,0 +1,15 @@
+#Создание раннера
+
+docker compose exec gitlab-runner gitlab-runner register \
+  --non-interactive \
+  --url "http://gitlab:80/" \
+  --clone-url "http://gitlab:80/" \
+  --registration-token "*token*" \
+  --executor "docker" \
+  --docker-image "alpine:latest" \
+  --docker-network-mode "gitlab_self_host_gitlab-network" \  # ИМЯ ИЗ docker network ls
+  --docker-volumes "/var/run/docker.sock:/var/run/docker.sock" \
+  --docker-privileged="true" \
+  --description "Runner with correct network" \
+  --tag-list "docker" \
+  --run-untagged="true"
